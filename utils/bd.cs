@@ -51,14 +51,16 @@ namespace prisma.core
                     string[] paths = new string[]{ ".", "..\\database", ".\\database" };
                     bool found = false;
                     foreach (string sqlPath in paths)
-                    {
-                        string filename = System.IO.Path.Combine(sqlPath, "create-database.sqlite.sql");
-                        if (!found && System.IO.File.Exists(filename))
+                        if (System.IO.Directory.Exists(sqlPath))
                         {
-                            CreateSQLiteDataBase(System.IO.File.ReadAllText(filename));
-                            found = true;
+                            string[] files = System.IO.Directory.GetFiles(sqlPath, "*.sql");
+                            if (!found && files.Length > 0)
+                            {
+                                found = true;
+                                foreach (string fileName in files)
+                                    CreateSQLiteDataBase(System.IO.File.ReadAllText(fileName));
+                            }
                         }
-                    }
                     if (!found)
                         throw new Exception("Database file not found!");
                 }

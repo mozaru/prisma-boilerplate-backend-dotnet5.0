@@ -19,7 +19,6 @@ using System.Dynamic;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
-using CompiladorDMZL;
 
 namespace prisma.core
 {
@@ -540,15 +539,6 @@ namespace prisma.core
                 return valor;
             else
                 return double.Parse("0"+obj[campo]);
-        }
-
-        public static Dictionary<string,string> Gerar(string algorithm, string mzalContent, string fileName)
-        {
-            return Transpilador.Transpilar(algorithm,mzalContent,fileName);         
-        }
-        public static Dictionary<string, string[]> GetCommands(string mzalContent)
-        {
-            return Transpilador.Comandos(mzalContent);
         }
     }
 }
