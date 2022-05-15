@@ -48,9 +48,18 @@ namespace prisma.core
                 _conn = new SQLiteConnection(ConnectionString);   
                 if (!System.IO.File.Exists(_db_name+".sqlite"))
                 {
-                    if (System.IO.File.Exists("create-database.sqlite.sql"))
-                        CreateSQLiteDataBase(System.IO.File.ReadAllText("create-database.sqlite.sql"));
-                    else
+                    string[] paths = new string[]{ ".", "..\\database", ".\\database" };
+                    bool found = false;
+                    foreach (string sqlPath in paths)
+                    {
+                        string filename = System.IO.Path.Combine(sqlPath, "create-database.sqlite.sql");
+                        if (!found && System.IO.File.Exists(filename))
+                        {
+                            CreateSQLiteDataBase(System.IO.File.ReadAllText(filename));
+                            found = true;
+                        }
+                    }
+                    if (!found)
                         throw new Exception("Database file not found!");
                 }
 #elif SQSERVER
