@@ -16,17 +16,19 @@ namespace prisma.core
 {
     public class Banco : IDisposable
     {
+#pragma warning disable CS0414 // Adicionar modificador somente leitura
         private string _host = Constantes._BD_HOST_;
         private string _port = Constantes._BD_PORT_;
         private string _db_name = Constantes._BD_DATABASE_;
         private string _username = Constantes._BD_LOGIN_;
         private string _password = Constantes._BD_PASSWORD_;
-        private IDbConnection? _conn=null;
-        private IDbCommand? _stmt=null;
+        private IDbConnection _conn=null;
+        private IDbCommand _stmt=null;
         private string _tipo = "QUERY";
         private string _erro = "";
         private long _rowcount = 0;
         private int _lastid = 0;
+#pragma warning restore CS0414 // Adicionar modificador somente leitura
 
         public Banco()
         {
@@ -237,7 +239,7 @@ namespace prisma.core
             }
         }
 
-        public void Parametro(string nome, object? valor)
+        public void Parametro(string nome, object valor)
         {
             try
             {
@@ -329,7 +331,7 @@ namespace prisma.core
 #elif POSTGRESQL
                 _stmt.Prepare();
 #endif
-                List<dynamic>? data = null;
+                List<dynamic> data = null;
                 if (_tipo == "QUERY")
                 {
                     using (IDataReader r = _stmt.ExecuteReader())
@@ -351,7 +353,7 @@ namespace prisma.core
                     _lastid = (int)((MySqlCommand)_stmt).LastInsertedId;
 #elif SQLITE
                     _stmt.ExecuteNonQuery();
-                    SQLiteConnection? conn = _conn as SQLiteConnection;
+                    SQLiteConnection conn = _conn as SQLiteConnection;
                     _lastid = (int)((conn == null) ? -1 : conn.LastInsertRowId);                    
 #elif SQSERVER
                     _lastid = (int)_stmt.ExecuteScalar();
@@ -386,7 +388,7 @@ namespace prisma.core
             }
         }
 
-        public List<dynamic>? Listar(string query)
+        public List<dynamic> Listar(string query)
         {
             try
             {
@@ -404,7 +406,7 @@ namespace prisma.core
             }
         }
 
-        public object? ObterPeloId(string query, int id)
+        public object ObterPeloId(string query, int id)
         {
             try
             {

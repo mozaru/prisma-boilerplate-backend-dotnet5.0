@@ -24,7 +24,7 @@ namespace prisma.core
 {
     public class Utils
     {
-        public static string? ObterToken(HttpRequest request)
+        public static string ObterToken(HttpRequest request)
         {
             if (!request.Headers.ContainsKey("Authorization"))
             {
@@ -70,19 +70,19 @@ namespace prisma.core
         public static dynamic ObterPayloadToken(object token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            SecurityToken? securityToken = null;
+            SecurityToken securityToken = null;
             tokenHandler.ValidateToken(token.ToString(), CriarTokenValidation(), out securityToken);
             if (securityToken == null)
                 throw new ExceptionToken("Token inválido", 401);
             return DicToDynamic(((JwtSecurityToken)securityToken).Payload);
         }
 
-        private static bool TentaObterPayloadToken(HttpRequest request, out dynamic? payload)
+        private static bool TentaObterPayloadToken(HttpRequest request, out dynamic payload)
         {
             payload = null;
             try
             {
-                string? token = ObterToken(request);
+                string token = ObterToken(request);
                 if (token == null)
                     return false;
                 payload = ObterPayloadToken(token);
@@ -136,7 +136,7 @@ namespace prisma.core
                 return new DateTime(int.Parse(v[2]), int.Parse(v[1]), int.Parse(v[0]));
         }
 
-        public static dynamic? StrJsonToData(string str)
+        public static dynamic StrJsonToData(string str)
         {
             DataContractJsonSerializer serialiser = new DataContractJsonSerializer(
                 typeof(Dictionary<string, object>),
@@ -147,7 +147,7 @@ namespace prisma.core
 
             using (Stream sr = StrToStream(str))
             {
-                object? x = serialiser.ReadObject(sr);
+                object x = serialiser.ReadObject(sr);
                 return x==null?null:(dynamic)x;
             }
 
@@ -181,17 +181,17 @@ namespace prisma.core
         }
         public static string JArrayToString(object json)
         {
-            string[]? vet = JsonSerializer.Deserialize<string[]>(((JsonElement)json).GetRawText());
+            string[] vet = JsonSerializer.Deserialize<string[]>(((JsonElement)json).GetRawText());
             return vet==null?"":string.Join(",", vet);
         }
         public static string JArrayToInt(object json)
         {
-            int[]? vet = JsonSerializer.Deserialize<int[]>(((JsonElement)json).GetRawText());
+            int[] vet = JsonSerializer.Deserialize<int[]>(((JsonElement)json).GetRawText());
             return vet == null ? "" : string.Join(",", vet);
         }
         public static string JArrayToDouble(object json)
         {
-            double[]? vet = System.Text.Json.JsonSerializer.Deserialize<double[]>(((JsonElement)json).GetRawText());
+            double[] vet = System.Text.Json.JsonSerializer.Deserialize<double[]>(((JsonElement)json).GetRawText());
             return vet==null?"":string.Join(",", vet);
         }
         public static string GetServerIp()
@@ -294,7 +294,7 @@ namespace prisma.core
             return new string(senha);
         }
 
-        public static string ToBase64(object? valor)
+        public static string ToBase64(object valor)
         {
             if (valor == null)
                 return "";
@@ -386,7 +386,7 @@ namespace prisma.core
         {
             try
             {
-                dynamic? obj;
+                dynamic obj;
                 if (!TentaObterPayloadToken(request, out obj))
                     throw new ExceptionToken("Token não validado!", 401);
                 Console.WriteLine("tipo={0}\n{1}", tipo, DataToStrJson(obj));
@@ -422,7 +422,7 @@ namespace prisma.core
                 ChecarToken(request, GetClientIp(request), Constantes._OAUTH_TIPO_TOKEN_DEFAULT_, perfil);
         }
 
-        public static dynamic? GetPayloadToken(HttpRequest request, string perfil = Constantes._OAUTH_PERFIL_PADRAO_)
+        public static dynamic GetPayloadToken(HttpRequest request, string perfil = Constantes._OAUTH_PERFIL_PADRAO_)
         {
             if (!request.Headers.ContainsKey("Authorization"))
                 throw new Exception("acesso nao permitido\nAuthorization nao encontrado");
@@ -432,7 +432,7 @@ namespace prisma.core
                 throw new Exception("Autorization deve ser do tipo bearer");
             else
             {
-                dynamic? payload;
+                dynamic payload;
                 if (!TentaObterPayloadToken(request, out payload))
                     throw new ExceptionToken("Token não validado!", 401);
                 return payload;
@@ -441,7 +441,7 @@ namespace prisma.core
 
         public static int GetIdCurrentUser(HttpRequest request, string perfil = Constantes._OAUTH_PERFIL_PADRAO_)
         {
-            dynamic? payload = GetPayloadToken(request);
+            dynamic payload = GetPayloadToken(request);
             return payload == null ? -1 : int.Parse(payload.id);
         }
 

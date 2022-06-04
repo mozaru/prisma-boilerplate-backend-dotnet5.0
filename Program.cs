@@ -14,7 +14,7 @@ namespace #NAME_SPACE#
     {
         private static string getValor(string nome)
         {
-            string? v = Environment.GetEnvironmentVariable(nome);
+            string v = Environment.GetEnvironmentVariable(nome);
             if (v == null)
                 return "";
             else
