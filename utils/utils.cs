@@ -1,18 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-//using MySql.Data.MySqlClient;
-//using Newtonsoft.Json;
-using System.Data;
-using System.Data.SQLite;
 using System.Security.Cryptography;
 using System.Net;
 using System.Text;
 using System.IO;
-//using System.Json;
 using System.Runtime.Serialization.Json;
 using System.Text.Json;
 using System.Dynamic;
@@ -344,14 +337,14 @@ namespace prisma.core
             }
         }*/
 
-        public static string CriarAccessToken(int id, string login, string perfil)
+        public static string CriarAccessToken(long id, string login, string perfil)
         {
             return CriarToken(DateTime.UtcNow.AddMinutes(Constantes._OAUTH_ACCESS_TOKEN_VALIDADE_),
                               new Claim("id", id.ToString()),
                               new Claim("login", login),
                               new Claim("perfil", perfil));
         }
-        public static string CriarRefreshToken(int id, string login, string perfil)
+        public static string CriarRefreshToken(long id, string login, string perfil)
         {
             return CriarToken(DateTime.UtcNow.AddHours(Constantes._OAUTH_REFRESH_TOKEN_VALIDADE_),
                               new Claim("id", id.ToString()),
